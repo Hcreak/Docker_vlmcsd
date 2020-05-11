@@ -1,7 +1,7 @@
-FROM centos
+FROM arm32v7/centos
 
-RUN yum -y upgrade
-RUN yum -y install git gcc make
+RUN yum -y --nogpgcheck upgrade
+RUN yum -y --nogpgcheck install git gcc make
 RUN git clone https://github.com/Wind4/vlmcsd.git
 WORKDIR vlmcsd
 RUN make
