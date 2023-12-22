@@ -1,15 +1,14 @@
-FROM centos
+FROM alpine as builder
 
-RUN yum -y upgrade
-RUN yum -y install git gcc make
+RUN apk add git gcc make build-base
 RUN git clone https://github.com/Wind4/vlmcsd.git
 WORKDIR vlmcsd
 RUN make
 
-ADD start.sh start.sh
-RUN chmod +x start.sh
+FROM alpine
+COPY --from=builder /vlmcsd/bin/vlmcsd /usr/bin/vlmcsd
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime
 
-EXPOSE 1688
-CMD ["./start.sh"]
+EXPOSE 1688/tcp
+CMD [ "/usr/bin/vlmcsd", "-D", "-d" ]
